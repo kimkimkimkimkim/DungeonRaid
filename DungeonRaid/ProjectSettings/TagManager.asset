@@ -3,7 +3,17 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - centerAttack
+  - centerDefense
+  - centerGold
+  - centerExp
+  - centerEnemy
+  - dropAttack
+  - dropDefense
+  - dropGold
+  - dropExp
+  - dropEnemy
   layers:
   - Default
   - TransparentFX
