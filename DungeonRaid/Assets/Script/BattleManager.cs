@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using DG.Tweening;
 
 public class BattleManager : MonoBehaviour {
 
 	public GameObject maincamera; //カメラ
+	public GameObject particlePrefab; //攻撃エフェクトパーティクルのプレハブ
 	public GameObject gameManager;
 	public GameObject textAtkBase; //基礎攻撃力
 	public GameObject textAtk; //攻撃力テキスト
@@ -15,6 +17,8 @@ public class BattleManager : MonoBehaviour {
 	public GameObject sliderHp; //HPスライダー
 	public GameObject sliderGold; //ゴールドスライダー
 	public GameObject sliderExp; //経験値スライダー
+	public GameObject imageDim; //操作不可能を示すための画像
+	public GameObject field; //フィールド
 	public int atkBase; //基礎攻撃力
 	public int atkNow; //現在の攻撃力
 	public int atkRise; //攻撃力上昇値
@@ -40,8 +44,78 @@ public class BattleManager : MonoBehaviour {
 
 	//EnemyAttack
 	private void EnemyAttack(){
+		int atkEnemy = 0; //敵の総攻撃力
+		int lineCount = field.transform.childCount; //ラインの個数
+		for(int i=0;i<lineCount;i++){
+			GameObject line = field.transform.GetChild(i).gameObject;
+			int dropCount = line.transform.childCount;
+			for(int j=0;j<dropCount;j++){
+				GameObject drop = line.transform.GetChild(j).gameObject; //ドロップ
+				if(drop.name.IndexOf("Enemy") != -1){
+					//ドロップがEnemyドロップなら
+					atkEnemy += int.Parse(drop.transform.Find("TextAttack").gameObject.GetComponent<Text>().text);
+				}
+			}
+		}
+		if(atkEnemy == 0)return; //敵の攻撃がない場合すぐリターン
+		//敵の攻撃がある場合
+		imageDim.SetActive(true); //Dimの表示
+		gameManager.GetComponent<GameManager>().canScreenTouch = false; //画面操作不可にする
+
+		//攻撃開始
 		StartCoroutine(DelayMethod(0.5f,() => {
-			sliderHp.transform.parent.parent.gameObject.GetComponent<CameraShake>().Shake(0.5f,20.1f);
+			for(int i=0;i<lineCount;i++){
+				GameObject line = field.transform.GetChild(i).gameObject;
+				int dropCount = line.transform.childCount;
+				for(int j=0;j<dropCount;j++){
+					GameObject drop = line.transform.GetChild(j).gameObject; //ドロップ
+					if(drop.name.IndexOf("Enemy") != -1){
+						//ドロップがEnemyドロップなら
+						//int attackId = charaState[i];
+						float timeAnim = 1f;
+						/* circleの作成 */
+						GameObject particle = (GameObject)Instantiate(particlePrefab);
+						particle.transform.position = drop.transform.position;
+
+						//軌跡設定
+						float disX = 0.5f;
+						float disY = 0.5f;
+						Vector3[] path = {
+							new Vector3(particle.transform.position.x + (disX * (UnityEngine.Random.Range(0,6)-2))
+								, particle.transform.position.y + (disY * (j-5)),0f), //中間地点
+							sliderHp.transform.parent.parent.position, //到達点
+						};
+
+						//DOTweenを使ったアニメ作成
+						particle.transform.DOPath(path,timeAnim,PathType.CatmullRom)
+							.SetEase(Ease.OutSine);
+
+						/* Pirticleの消去とエフェクトの表示 */
+						/*
+						StartCoroutine(DelayMethod(timeAnim,() => {
+							imageDim.SetActive(false);
+							gameManager.GetComponent<GameManager>().canScreenTouch = true;
+							nowHp -= atkEnemy;
+							Debug.Log("nowHp : " + nowHp);
+							UpdateUIHp();
+							sliderHp.transform.parent.parent.gameObject.GetComponent<CameraShake>().Shake(0.5f,20.1f);
+						}));
+						*/
+						
+					}
+				}
+			}
+
+			//攻撃終了
+			StartCoroutine(DelayMethod(1f,() => {
+				imageDim.SetActive(false);
+				gameManager.GetComponent<GameManager>().canScreenTouch = true;
+				nowHp -= atkEnemy;
+				Debug.Log("nowHp : " + nowHp);
+				UpdateUIHp();
+				sliderHp.transform.parent.parent.gameObject.GetComponent<CameraShake>().Shake(0.5f,20.1f);
+			}));
+		
 		}));
 	}
 
