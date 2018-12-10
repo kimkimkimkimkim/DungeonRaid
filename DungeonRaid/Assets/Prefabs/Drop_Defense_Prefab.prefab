@@ -37,9 +37,11 @@ GameObject:
   m_Component:
   - component: {fileID: 224830931784393400}
   - component: {fileID: 222487504034521464}
-  - component: {fileID: 61668326192578562}
   - component: {fileID: 50365880863329770}
   - component: {fileID: 114069728130344734}
+  - component: {fileID: 114630446477191438}
+  - component: {fileID: 58842750176870920}
+  - component: {fileID: 61236191943697200}
   m_Layer: 5
   m_Name: Drop_Defense_Prefab
   m_TagString: dropDefense
@@ -78,25 +80,40 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 6200000, guid: cde70186f8b37422fa893a535105e52a, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 5
---- !u!61 &61668326192578562
-BoxCollider2D:
+  m_Constraints: 4
+--- !u!58 &58842750176870920
+CircleCollider2D:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1763194464031234}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 93.75}
+  m_Offset: {x: 0, y: 97.25}
+  serializedVersion: 2
+  m_Radius: 97.25
+--- !u!61 &61236191943697200
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1763194464031234}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 97.25}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -107,7 +124,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 187.5, y: 187.5}
+  m_Size: {x: 180, y: 187.5}
   m_EdgeRadius: 0
 --- !u!114 &114069728130344734
 MonoBehaviour:
@@ -190,6 +207,18 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114630446477191438
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1763194464031234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21eb109db418d4c878ee74aa1b5ea1c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  line: 0
 --- !u!222 &222307696255210922
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -246,7 +275,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 186.25}
+  m_AnchoredPosition: {x: 0, y: -382.24994}
   m_SizeDelta: {x: 187.5, y: 187.5}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!224 &224897110955271234
