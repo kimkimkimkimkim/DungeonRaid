@@ -114,6 +114,7 @@ public class GameManager : MonoBehaviour {
 			if (length >= 3) {
 				
 				//currentNameによってActionの分岐
+				
 				if(currentName.IndexOf("Attack") != -1 || currentName.IndexOf("Enemy") != -1){
 					//AttackかEnemyの時
 					battleManager.GetComponent<BattleManager>().Attack(removableBallList);

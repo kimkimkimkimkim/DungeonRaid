@@ -19,6 +19,8 @@ public class BattleManager : MonoBehaviour {
 	public GameObject sliderExp; //経験値スライダー
 	public GameObject imageDim; //操作不可能を示すための画像
 	public GameObject field; //フィールド
+	public GameObject shop; //ショップ
+	public GameObject levelup; //レベルアップ
 	public int atkBase; //基礎攻撃力
 	public int atkNow; //現在の攻撃力
 	public int atkRise; //攻撃力上昇値
@@ -42,6 +44,32 @@ public class BattleManager : MonoBehaviour {
 		UpdateUIExp();
 	}
 
+	//レベルアップ
+	private void LevelUp(){
+		if(nowExp >= maxExp){
+			//LevelUp
+
+		}else{
+
+		}
+	}
+
+	//レベルアップのOKボタンを押したら
+	public void LevelUpOK(){
+		levelup.SetActive(false);
+	}
+
+
+	//ショップ
+	private void Shop(){
+
+	}
+
+	//ショップのOKボタン押したら
+	public void ShopOK(){
+		shop.SetActive(false);
+	}
+
 	//EnemyAttack
 	private void EnemyAttack(){
 		int atkEnemy = 0; //敵の総攻撃力
@@ -57,10 +85,13 @@ public class BattleManager : MonoBehaviour {
 				}
 			}
 		}
-		if(atkEnemy == 0)return; //敵の攻撃がない場合すぐリターン
-		//敵の攻撃がある場合
 		imageDim.SetActive(true); //Dimの表示
 		gameManager.GetComponent<GameManager>().canScreenTouch = false; //画面操作不可にする
+		if(atkEnemy == 0){
+			LevelUp();
+			return; //敵の攻撃がない場合すぐリターン
+		}
+		//敵の攻撃がある場合
 
 		//攻撃開始
 		StartCoroutine(DelayMethod(0.5f,() => {
