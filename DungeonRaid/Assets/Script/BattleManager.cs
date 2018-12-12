@@ -47,26 +47,41 @@ public class BattleManager : MonoBehaviour {
 	//レベルアップ
 	private void LevelUp(){
 		if(nowExp >= maxExp){
-			//LevelUp
-
+			//LevelUpする
+			nowExp = 0;
+			UpdateUIExp();
+			levelup.SetActive(true);
 		}else{
-
+			//LevelUpしない
+			Shop();
 		}
 	}
 
 	//レベルアップのOKボタンを押したら
 	public void LevelUpOK(){
 		levelup.SetActive(false);
+		Shop();
 	}
 
 
 	//ショップ
 	private void Shop(){
-
+		if(nowGold >= maxGold){
+			//Shopを開く
+			nowGold = 0;
+			UpdateUIGold();
+			shop.SetActive(true);
+		}else{
+			//Shopを開かない
+			imageDim.SetActive(false);
+			gameManager.GetComponent<GameManager>().canScreenTouch = true;
+		}
 	}
 
 	//ショップのOKボタン押したら
 	public void ShopOK(){
+		imageDim.SetActive(false);
+		gameManager.GetComponent<GameManager>().canScreenTouch = true;
 		shop.SetActive(false);
 	}
 
@@ -139,12 +154,16 @@ public class BattleManager : MonoBehaviour {
 
 			//攻撃終了
 			StartCoroutine(DelayMethod(1f,() => {
-				imageDim.SetActive(false);
-				gameManager.GetComponent<GameManager>().canScreenTouch = true;
+				//imageDim.SetActive(false);
+				//gameManager.GetComponent<GameManager>().canScreenTouch = true;
 				nowHp -= atkEnemy;
 				Debug.Log("nowHp : " + nowHp);
 				UpdateUIHp();
 				sliderHp.transform.parent.parent.gameObject.GetComponent<CameraShake>().Shake(0.5f,20.1f);
+
+				StartCoroutine(DelayMethod(0.6f,() => {
+					LevelUp();
+				}));
 			}));
 		
 		}));
