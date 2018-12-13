@@ -114,7 +114,6 @@ public class GameManager : MonoBehaviour {
 			if (length >= 3) {
 				
 				//currentNameによってActionの分岐
-				
 				if(currentName.IndexOf("Attack") != -1 || currentName.IndexOf("Enemy") != -1){
 					//AttackかEnemyの時
 					battleManager.GetComponent<BattleManager>().Attack(removableBallList);
@@ -129,13 +128,14 @@ public class GameManager : MonoBehaviour {
 			} else {
 				//消去するリストに3個以上ボールがない時
 				battleManager.GetComponent<BattleManager>().Attack(removableBallList);
+				ChangeColor("",1);
 			}
 			//Lineを削除
 			for(int i=0;i<containerLine.transform.childCount;i++){
 				Destroy(containerLine.transform.GetChild(i).gameObject);
 			}
 			firstDrop = null; //変数の初期化
-			ChangeColor("",1);
+			
 		}
 	}
 
@@ -163,9 +163,6 @@ public class GameManager : MonoBehaviour {
 					float dist = Vector2.Distance ((Vector2)lastDrop.transform.position, (Vector2)colObj.transform.position); //直前のドロップと現在のドロップとの距離
 					//float distRef = heightDrop * (float)Math.Sqrt(2);
 					float distRef = 1.5f;
-					Debug.Log("lastPos : " + lastDrop.transform.localPosition );
-					Debug.Log("nowPos : " + center.transform.localPosition);
-					Debug.Log("dist : " + dist + "  distref : " + distRef);
 					if(dist <= distRef){
 						//距離が一定値以下のとき
 						PushList(drop); //dropをリストに追加
@@ -236,7 +233,7 @@ public class GameManager : MonoBehaviour {
 	//色を変更する（暗くしたり、元に戻したり）
 	//name → 色を変更しないオブジェクトの名前
 	//color → 色
-	private void ChangeColor(string name,float color){
+	public void ChangeColor(string name,float color){
 		int lineCount =lines.Length; //ラインの個数
 		for(int i=0;i<lineCount;i++){
 			GameObject line = lines[i];

@@ -14,6 +14,9 @@ public class BattleManager : MonoBehaviour {
 	public GameObject textAtk; //攻撃力テキスト
 	public GameObject textDef; //守備力テキスト
 	public GameObject textHp; //HPテキスト
+	public GameObject textChangeValueGold; //ゴールドのCV
+	public GameObject textChangeValueExp; //経験値のCV
+	public GameObject textChangeValueHp; //HpのCV
 	public GameObject sliderHp; //HPスライダー
 	public GameObject sliderGold; //ゴールドスライダー
 	public GameObject sliderExp; //経験値スライダー
@@ -42,6 +45,9 @@ public class BattleManager : MonoBehaviour {
 		UpdateUIHp();
 		UpdateUIGold();
 		UpdateUIExp();
+		StartCoroutine(DelayMethod(1.0f,() => {
+			//GameOver();
+		}));
 	}
 
 	//レベルアップ
@@ -73,21 +79,30 @@ public class BattleManager : MonoBehaviour {
 			shop.SetActive(true);
 		}else{
 			//Shopを開かない
-			imageDim.SetActive(false);
+			//imageDim.SetActive(false);
+			gameManager.GetComponent<GameManager>().ChangeColor("",1);
 			gameManager.GetComponent<GameManager>().canScreenTouch = true;
 		}
 	}
 
 	//ショップのOKボタン押したら
 	public void ShopOK(){
-		imageDim.SetActive(false);
+		//imageDim.SetActive(false);
+		gameManager.GetComponent<GameManager>().ChangeColor("",1);
 		gameManager.GetComponent<GameManager>().canScreenTouch = true;
 		shop.SetActive(false);
 	}
 
 	//EnemyAttack
-	private void EnemyAttack(){
+	private void EnemyAttack(List<GameObject> attackEnemyList = null){
 		int atkEnemy = 0; //敵の総攻撃力
+		if(attackEnemyList != null){
+			for(int i=0;i<attackEnemyList.Count;i++){
+				GameObject drop = attackEnemyList[i];
+				atkEnemy += int.Parse(drop.transform.Find("TextAttack").gameObject.GetComponent<Text>().text); //攻撃力加算
+			}
+		}
+		/*
 		int lineCount = field.transform.childCount; //ラインの個数
 		for(int i=0;i<lineCount;i++){
 			GameObject line = field.transform.GetChild(i).gameObject;
@@ -100,8 +115,11 @@ public class BattleManager : MonoBehaviour {
 				}
 			}
 		}
-		imageDim.SetActive(true); //Dimの表示
+		*/
+		//imageDim.SetActive(true); //Dimの表示
+		gameManager.GetComponent<GameManager>().ChangeColor("",0.5f);
 		gameManager.GetComponent<GameManager>().canScreenTouch = false; //画面操作不可にする
+
 		if(atkEnemy == 0){
 			LevelUp();
 			return; //敵の攻撃がない場合すぐリターン
@@ -110,6 +128,16 @@ public class BattleManager : MonoBehaviour {
 
 		//攻撃開始
 		StartCoroutine(DelayMethod(0.5f,() => {
+			float timeEnemyAtackAnim = 1.0f;
+			for(int i=0;i<attackEnemyList.Count;i++){
+				GameObject drop = attackEnemyList[i];
+				GameObject eye = drop.transform.GetChild(5).gameObject;
+				eye.SetActive(true); //目を光らせる
+				StartCoroutine(DelayMethod(timeEnemyAtackAnim, () => {
+					eye.SetActive(false);
+				}));
+			}
+			/* 
 			for(int i=0;i<lineCount;i++){
 				GameObject line = field.transform.GetChild(i).gameObject;
 				int dropCount = line.transform.childCount;
@@ -119,7 +147,7 @@ public class BattleManager : MonoBehaviour {
 						//ドロップがEnemyドロップなら
 						//int attackId = charaState[i];
 						float timeAnim = 1f;
-						/* circleの作成 */
+						/* circleの作成 
 						GameObject particle = (GameObject)Instantiate(particlePrefab);
 						particle.transform.position = drop.transform.position;
 
@@ -136,7 +164,7 @@ public class BattleManager : MonoBehaviour {
 						particle.transform.DOPath(path,timeAnim,PathType.CatmullRom)
 							.SetEase(Ease.OutSine);
 
-						/* Pirticleの消去とエフェクトの表示 */
+						/* Pirticleの消去とエフェクトの表示 
 						/*
 						StartCoroutine(DelayMethod(timeAnim,() => {
 							imageDim.SetActive(false);
@@ -146,22 +174,27 @@ public class BattleManager : MonoBehaviour {
 							UpdateUIHp();
 							sliderHp.transform.parent.parent.gameObject.GetComponent<CameraShake>().Shake(0.5f,20.1f);
 						}));
-						*/
+						
 						
 					}
 				}
-			}
+			}*/
 
 			//攻撃終了
-			StartCoroutine(DelayMethod(1f,() => {
+			StartCoroutine(DelayMethod(timeEnemyAtackAnim,() => {
 				//imageDim.SetActive(false);
 				//gameManager.GetComponent<GameManager>().canScreenTouch = true;
 				nowHp -= atkEnemy;
+				nowHp = (nowHp<0)? 0 : nowHp;
 				Debug.Log("nowHp : " + nowHp);
 				UpdateUIHp();
 				sliderHp.transform.parent.parent.gameObject.GetComponent<CameraShake>().Shake(0.5f,20.1f);
 
 				StartCoroutine(DelayMethod(0.6f,() => {
+					if(nowHp <= 0){
+						GameOver();
+						return;
+					}
 					LevelUp();
 				}));
 			}));
@@ -175,6 +208,19 @@ public class BattleManager : MonoBehaviour {
 		int length = removableBallList.Count;
 		if(length <= 2)return; //配列の要素が2つ以下だったらリターン
 		int[] count = new int[]{0,0,0,0,0,0};
+		//攻撃する敵のオブジェクトを格納した配列
+		List<GameObject> attackEnemyList = new List<GameObject>();
+		//まずは敵オブジェクトを格納
+		for(int i=0;i<6;i++){
+			GameObject line = field.transform.GetChild(i).gameObject; //line
+			for(int j=0;j<line.transform.childCount;j++){
+				GameObject drop = line.transform.GetChild(j).gameObject;
+				if(drop.name.IndexOf("Enemy") != -1){
+					//ドロップが敵ドロップだったら追加
+					attackEnemyList.Add(drop);
+				}
+			}
+		}
 		int atk = atkBase;
 		//攻撃力計算
 		for(int i=0;i<length;i++){
@@ -186,6 +232,12 @@ public class BattleManager : MonoBehaviour {
 				//敵だったら
 				int hpEnemy = int.Parse(removableBallList[i].transform.Find("TextHp").GetComponent<Text>().text);
 				if(hpEnemy - atk <= 0){
+					//attackEnemyListないのドロップも削除
+					for(int j=0;j<attackEnemyList.Count;j++){
+						if(attackEnemyList[j] == removableBallList[i]){
+							attackEnemyList.RemoveAt(j);
+						}
+					}
 					//敵を倒せる
 					Destroy(removableBallList[i]); //ドロップを削除
 					count[removableBallList[i].GetComponent<DropManager>().line]++; //どのLineのオブジェクトなのかカウント
@@ -205,20 +257,33 @@ public class BattleManager : MonoBehaviour {
 		UpdateUIExp();
 
 		for(int i=0;i<6;i++){
-			gameManager.GetComponent<GameManager>().CreateDrop(i,count[i]);
+			gameManager.GetComponent<GameManager>().CreateDrop(i,count[i]); //ドロップ生成
 		}
 		StartCoroutine(DelayMethod(0.05f,() => {
 			gameManager.GetComponent<GameManager>().MoveDrop();
 		}));
 
 		//相手のターン
-		EnemyAttack();
+		EnemyAttack(attackEnemyList);
 
 	}
 
 	public void Defense(List<GameObject> removableBallList){
 		int length = removableBallList.Count;
 		int[] count = new int[]{0,0,0,0,0,0};
+		//攻撃する敵のオブジェクトを格納した配列
+		List<GameObject> attackEnemyList = new List<GameObject>();
+		//まずは敵オブジェクトを格納
+		for(int i=0;i<6;i++){
+			GameObject line = field.transform.GetChild(i).gameObject; //line
+			for(int j=0;j<line.transform.childCount;j++){
+				GameObject drop = line.transform.GetChild(j).gameObject;
+				if(drop.name.IndexOf("Enemy") != -1){
+					//ドロップが敵ドロップだったら追加
+					attackEnemyList.Add(drop);
+				}
+			}
+		}
 		for(int i=0;i<length;i++){
 			Destroy(removableBallList[i]); //ドロップを削除
 			count[removableBallList[i].GetComponent<DropManager>().line]++; //どのLineのオブジェクトなのかカウント
@@ -235,12 +300,25 @@ public class BattleManager : MonoBehaviour {
 		UpdateUIDef();
 
 		//相手のターン
-		EnemyAttack();
+		EnemyAttack(attackEnemyList);
 	}
 
 	public void Gold(List<GameObject> removableBallList){
 		int length = removableBallList.Count;
 		int[] count = new int[]{0,0,0,0,0,0};
+		//攻撃する敵のオブジェクトを格納した配列
+		List<GameObject> attackEnemyList = new List<GameObject>();
+		//まずは敵オブジェクトを格納
+		for(int i=0;i<6;i++){
+			GameObject line = field.transform.GetChild(i).gameObject; //line
+			for(int j=0;j<line.transform.childCount;j++){
+				GameObject drop = line.transform.GetChild(j).gameObject;
+				if(drop.name.IndexOf("Enemy") != -1){
+					//ドロップが敵ドロップだったら追加
+					attackEnemyList.Add(drop);
+				}
+			}
+		}
 		for(int i=0;i<length;i++){
 			Destroy(removableBallList[i]); //ドロップを削除
 			count[removableBallList[i].GetComponent<DropManager>().line]++; //どのLineのオブジェクトなのかカウント
@@ -257,12 +335,25 @@ public class BattleManager : MonoBehaviour {
 		UpdateUIGold();
 
 		//相手のターン
-		EnemyAttack();
+		EnemyAttack(attackEnemyList);
 	}
 
 	public void Exp(List<GameObject> removableBallList){
 		int length = removableBallList.Count;
 		int[] count = new int[]{0,0,0,0,0,0};
+		//攻撃する敵のオブジェクトを格納した配列
+		List<GameObject> attackEnemyList = new List<GameObject>();
+		//まずは敵オブジェクトを格納
+		for(int i=0;i<6;i++){
+			GameObject line = field.transform.GetChild(i).gameObject; //line
+			for(int j=0;j<line.transform.childCount;j++){
+				GameObject drop = line.transform.GetChild(j).gameObject;
+				if(drop.name.IndexOf("Enemy") != -1){
+					//ドロップが敵ドロップだったら追加
+					attackEnemyList.Add(drop);
+				}
+			}
+		}
 		for(int i=0;i<length;i++){
 			Destroy(removableBallList[i]); //ドロップを削除
 			count[removableBallList[i].GetComponent<DropManager>().line]++; //どのLineのオブジェクトなのかカウント
@@ -279,12 +370,25 @@ public class BattleManager : MonoBehaviour {
 		UpdateUIExp();
 
 		//相手のターン
-		EnemyAttack();
+		EnemyAttack(attackEnemyList);
 	}
 
 	public void Hp(List<GameObject> removableBallList){
 		int length = removableBallList.Count;
 		int[] count = new int[]{0,0,0,0,0,0};
+		//攻撃する敵のオブジェクトを格納した配列
+		List<GameObject> attackEnemyList = new List<GameObject>();
+		//まずは敵オブジェクトを格納
+		for(int i=0;i<6;i++){
+			GameObject line = field.transform.GetChild(i).gameObject; //line
+			for(int j=0;j<line.transform.childCount;j++){
+				GameObject drop = line.transform.GetChild(j).gameObject;
+				if(drop.name.IndexOf("Enemy") != -1){
+					//ドロップが敵ドロップだったら追加
+					attackEnemyList.Add(drop);
+				}
+			}
+		}
 		for(int i=0;i<length;i++){
 			Destroy(removableBallList[i]); //ドロップを削除
 			count[removableBallList[i].GetComponent<DropManager>().line]++; //どのLineのオブジェクトなのかカウント
@@ -301,7 +405,7 @@ public class BattleManager : MonoBehaviour {
 		UpdateUIHp();
 
 		//相手のターン
-		EnemyAttack();
+		EnemyAttack(attackEnemyList);
 	}
 
 	//UpdateUI
@@ -309,13 +413,16 @@ public class BattleManager : MonoBehaviour {
 
 		if(int.Parse(textAtkBase.GetComponent<Text>().text) < nowAtk){
 			//攻撃力が上昇していたら
+			//色変更
+			ColorManager c = new ColorManager();
+			textAtkBase.GetComponent<Text>().color = c.green;
 			//textAtkBaseをはねさせる
-			float timeAnim = 0.5f;
-			float dist = 50f;
-			iTween.MoveTo(textAtkBase, iTween.Hash("y",dist,"time",timeAnim/2,"easetype",iTween.EaseType.easeOutCirc
-			,"isLocal",true));
-			iTween.MoveTo(textAtkBase, iTween.Hash("delay",timeAnim/2 + 0.01f,"y",0,"time",timeAnim/2
-				,"easetype",iTween.EaseType.easeInCirc,"isLocal",true));
+			PopAnimation(textAtkBase,0.5f,50,0,false);
+		}
+		//基礎攻撃力だったら
+		if(nowAtk == atkBase){
+			ColorManager c = new ColorManager();
+			textAtkBase.GetComponent<Text>().color = c.thema;
 		}
 		
 		textAtkBase.GetComponent<Text>().text = nowAtk.ToString();
@@ -330,6 +437,21 @@ public class BattleManager : MonoBehaviour {
 		textHp.GetComponent<Text>().text = nowHp + "/" + maxHp;
 		sliderHp.GetComponent<Slider>().maxValue = maxHp;
 		//sliderHp.GetComponent<Slider>().value = nowHp;
+		//ChangeValueのアニメーション
+		if(sliderHp.GetComponent<Slider>().value > nowHp){
+			//ダメージを食らった
+			ColorManager c = new ColorManager();
+			textChangeValueHp.GetComponent<Text>().color = c.red;
+			textChangeValueHp.GetComponent<Text>().text = "-" + (sliderHp.GetComponent<Slider>().value-nowHp);
+			PopAnimation(textChangeValueHp,1f,50,10,true); //Popさせる
+		}else if(sliderHp.GetComponent<Slider>().value < nowHp){
+			//体力回復
+			ColorManager c = new ColorManager();
+			textChangeValueHp.GetComponent<Text>().color = c.green;
+			textChangeValueHp.GetComponent<Text>().text = "+" + (nowHp - sliderHp.GetComponent<Slider>().value);
+			PopAnimation(textChangeValueHp,1f,50,10,true); //Popさせる
+		}
+		//スライダーのアニメーション
 		iTween.ValueTo(gameObject, iTween.Hash("from",sliderHp.GetComponent<Slider>().value,"to",nowHp
 			,"onupdate","UpdateHpSlider","onupdatetarget",gameObject));
 	}
@@ -341,6 +463,12 @@ public class BattleManager : MonoBehaviour {
 	private void UpdateUIGold(){
 		sliderGold.GetComponent<Slider>().maxValue = maxGold;
 		//sliderGold.GetComponent<Slider>().value = nowGold;
+		//popアニメーション
+		ColorManager c = new ColorManager();
+		textChangeValueGold.GetComponent<Text>().color = c.green;
+		textChangeValueGold.GetComponent<Text>().text = "+" + (nowGold - sliderGold.GetComponent<Slider>().value);
+		PopAnimation(textChangeValueGold,1f,50,10,true); //Popさせる
+		//スライダーのアニメーション
 		iTween.ValueTo(gameObject, iTween.Hash("from",sliderGold.GetComponent<Slider>().value,"to",nowGold
 			,"onupdate","UpdateGoldSlider","onupdatetarget",gameObject));
 	}
@@ -352,12 +480,32 @@ public class BattleManager : MonoBehaviour {
 	private void UpdateUIExp(){
 		sliderExp.GetComponent<Slider>().maxValue = maxExp;
 		//sliderExp.GetComponent<Slider>().value = nowExp;
+		//popアニメーション
+		ColorManager c = new ColorManager();
+		textChangeValueExp.GetComponent<Text>().color = c.green;
+		textChangeValueExp.GetComponent<Text>().text = "+" + (nowExp - sliderExp.GetComponent<Slider>().value);
+		PopAnimation(textChangeValueExp,1f,50,10,true);
+		//スライダーのアニメーション
 		iTween.ValueTo(gameObject, iTween.Hash("from",sliderExp.GetComponent<Slider>().value,"to",nowExp
 			,"onupdate","UpdateExpSlider","onupdatetarget",gameObject));
 	}
 
 	private void UpdateExpSlider(float value){
 		sliderExp.GetComponent<Slider>().value = value;
+	}
+
+	//跳ねさせるアニメーション
+	private void PopAnimation(GameObject obj,float timeAnim,float popdist,float posinit,bool activefalseAtTheEnd){
+		obj.SetActive(true);
+		iTween.MoveTo(obj, iTween.Hash("y",posinit + popdist,"time",timeAnim/2,"easetype",iTween.EaseType.easeOutCirc
+		,"isLocal",true));
+		iTween.MoveTo(obj, iTween.Hash("delay",timeAnim/2 + 0.01f,"y",posinit,"time",timeAnim/2
+			,"easetype",iTween.EaseType.easeInCirc,"isLocal",true));
+		if(activefalseAtTheEnd){
+			StartCoroutine(DelayMethod(timeAnim, () => {
+				obj.SetActive(false);
+			}));
+		}
 	}
 
 
@@ -384,6 +532,31 @@ public class BattleManager : MonoBehaviour {
 		}
 		//UIに反映
 		UpdateUIAtk(atk);
+	}
+
+	//ゲームオーバーアニメーション
+	private void GameOver(){
+		imageDim.SetActive(true); //画面の表示
+		GameObject imageText = imageDim.transform.GetChild(0).gameObject; //テキスト
+		imageText.SetActive(true);
+		//テキストのアニメーション
+		iTween.MoveFrom(imageText, iTween.Hash("y",10,"time",2.5f,"oncomplete","ShowButton"
+			,"oncompletetarget",gameObject,"easetype",iTween.EaseType.easeOutBounce));
+	}
+
+	private void ShowButton(){
+		GameObject btn1 = imageDim.transform.GetChild(1).gameObject;
+		GameObject btn2 = imageDim.transform.GetChild(2).gameObject;
+		BlinkText();
+		imageDim.GetComponent<TapGameOverView>().canTap = true;
+	}
+
+	private void BlinkText(){
+		GameObject text = imageDim.transform.GetChild(3).gameObject;
+		StartCoroutine(DelayMethod(0.5f,() => {
+			text.SetActive(!text.activeSelf);
+			BlinkText();
+		}));
 	}
 
 	private IEnumerator DelayMethod(float waitTime, Action action)

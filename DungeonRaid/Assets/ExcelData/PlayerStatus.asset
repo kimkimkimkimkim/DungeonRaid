@@ -1,0 +1,516 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 8
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f96c370ec25a4ebc8a37e0d45afdb91, type: 3}
+  m_Name: PlayerStatus
+  m_EditorClassIdentifier: 
+  sheets:
+  - name: PlayerStatus
+    list:
+    - Level: 1
+      HP: 20
+      Attack: 3
+      AttackRaise: 1
+      Defense: 1
+    - Level: 2
+      HP: 21
+      Attack: 4
+      AttackRaise: 1
+      Defense: 1
+    - Level: 3
+      HP: 22
+      Attack: 4
+      AttackRaise: 2
+      Defense: 2
+    - Level: 4
+      HP: 23
+      Attack: 4
+      AttackRaise: 2
+      Defense: 2
+    - Level: 5
+      HP: 24
+      Attack: 5
+      AttackRaise: 2
+      Defense: 3
+    - Level: 6
+      HP: 25
+      Attack: 5
+      AttackRaise: 2
+      Defense: 3
+    - Level: 7
+      HP: 26
+      Attack: 5
+      AttackRaise: 2
+      Defense: 3
+    - Level: 8
+      HP: 27
+      Attack: 6
+      AttackRaise: 3
+      Defense: 4
+    - Level: 9
+      HP: 28
+      Attack: 6
+      AttackRaise: 3
+      Defense: 4
+    - Level: 10
+      HP: 29
+      Attack: 6
+      AttackRaise: 3
+      Defense: 4
+    - Level: 11
+      HP: 30
+      Attack: 7
+      AttackRaise: 3
+      Defense: 5
+    - Level: 12
+      HP: 31
+      Attack: 7
+      AttackRaise: 3
+      Defense: 5
+    - Level: 13
+      HP: 32
+      Attack: 7
+      AttackRaise: 4
+      Defense: 5
+    - Level: 14
+      HP: 33
+      Attack: 8
+      AttackRaise: 4
+      Defense: 6
+    - Level: 15
+      HP: 34
+      Attack: 8
+      AttackRaise: 4
+      Defense: 6
+    - Level: 16
+      HP: 35
+      Attack: 8
+      AttackRaise: 4
+      Defense: 6
+    - Level: 17
+      HP: 36
+      Attack: 9
+      AttackRaise: 4
+      Defense: 7
+    - Level: 18
+      HP: 37
+      Attack: 9
+      AttackRaise: 5
+      Defense: 7
+    - Level: 19
+      HP: 38
+      Attack: 9
+      AttackRaise: 5
+      Defense: 7
+    - Level: 20
+      HP: 39
+      Attack: 10
+      AttackRaise: 5
+      Defense: 8
+    - Level: 21
+      HP: 40
+      Attack: 10
+      AttackRaise: 5
+      Defense: 8
+    - Level: 22
+      HP: 41
+      Attack: 10
+      AttackRaise: 5
+      Defense: 8
+    - Level: 23
+      HP: 42
+      Attack: 11
+      AttackRaise: 6
+      Defense: 9
+    - Level: 24
+      HP: 43
+      Attack: 11
+      AttackRaise: 6
+      Defense: 9
+    - Level: 25
+      HP: 44
+      Attack: 11
+      AttackRaise: 6
+      Defense: 9
+    - Level: 26
+      HP: 45
+      Attack: 12
+      AttackRaise: 6
+      Defense: 10
+    - Level: 27
+      HP: 46
+      Attack: 12
+      AttackRaise: 6
+      Defense: 10
+    - Level: 28
+      HP: 47
+      Attack: 12
+      AttackRaise: 7
+      Defense: 10
+    - Level: 29
+      HP: 48
+      Attack: 13
+      AttackRaise: 7
+      Defense: 11
+    - Level: 30
+      HP: 49
+      Attack: 13
+      AttackRaise: 7
+      Defense: 11
+    - Level: 31
+      HP: 50
+      Attack: 13
+      AttackRaise: 7
+      Defense: 11
+    - Level: 32
+      HP: 51
+      Attack: 14
+      AttackRaise: 7
+      Defense: 12
+    - Level: 33
+      HP: 52
+      Attack: 14
+      AttackRaise: 8
+      Defense: 12
+    - Level: 34
+      HP: 53
+      Attack: 14
+      AttackRaise: 8
+      Defense: 12
+    - Level: 35
+      HP: 54
+      Attack: 15
+      AttackRaise: 8
+      Defense: 13
+    - Level: 36
+      HP: 55
+      Attack: 15
+      AttackRaise: 8
+      Defense: 13
+    - Level: 37
+      HP: 56
+      Attack: 15
+      AttackRaise: 8
+      Defense: 13
+    - Level: 38
+      HP: 57
+      Attack: 16
+      AttackRaise: 9
+      Defense: 14
+    - Level: 39
+      HP: 58
+      Attack: 16
+      AttackRaise: 9
+      Defense: 14
+    - Level: 40
+      HP: 59
+      Attack: 16
+      AttackRaise: 9
+      Defense: 14
+    - Level: 41
+      HP: 60
+      Attack: 17
+      AttackRaise: 9
+      Defense: 15
+    - Level: 42
+      HP: 61
+      Attack: 17
+      AttackRaise: 9
+      Defense: 15
+    - Level: 43
+      HP: 62
+      Attack: 17
+      AttackRaise: 10
+      Defense: 15
+    - Level: 44
+      HP: 63
+      Attack: 18
+      AttackRaise: 10
+      Defense: 16
+    - Level: 45
+      HP: 64
+      Attack: 18
+      AttackRaise: 10
+      Defense: 16
+    - Level: 46
+      HP: 65
+      Attack: 18
+      AttackRaise: 10
+      Defense: 16
+    - Level: 47
+      HP: 66
+      Attack: 19
+      AttackRaise: 10
+      Defense: 17
+    - Level: 48
+      HP: 67
+      Attack: 19
+      AttackRaise: 11
+      Defense: 17
+    - Level: 49
+      HP: 68
+      Attack: 19
+      AttackRaise: 11
+      Defense: 17
+    - Level: 50
+      HP: 69
+      Attack: 20
+      AttackRaise: 11
+      Defense: 18
+    - Level: 51
+      HP: 70
+      Attack: 20
+      AttackRaise: 11
+      Defense: 18
+    - Level: 52
+      HP: 71
+      Attack: 20
+      AttackRaise: 11
+      Defense: 18
+    - Level: 53
+      HP: 72
+      Attack: 21
+      AttackRaise: 12
+      Defense: 19
+    - Level: 54
+      HP: 73
+      Attack: 21
+      AttackRaise: 12
+      Defense: 19
+    - Level: 55
+      HP: 74
+      Attack: 21
+      AttackRaise: 12
+      Defense: 19
+    - Level: 56
+      HP: 75
+      Attack: 22
+      AttackRaise: 12
+      Defense: 20
+    - Level: 57
+      HP: 76
+      Attack: 22
+      AttackRaise: 12
+      Defense: 20
+    - Level: 58
+      HP: 77
+      Attack: 22
+      AttackRaise: 13
+      Defense: 20
+    - Level: 59
+      HP: 78
+      Attack: 23
+      AttackRaise: 13
+      Defense: 21
+    - Level: 60
+      HP: 79
+      Attack: 23
+      AttackRaise: 13
+      Defense: 21
+    - Level: 61
+      HP: 80
+      Attack: 23
+      AttackRaise: 13
+      Defense: 21
+    - Level: 62
+      HP: 81
+      Attack: 24
+      AttackRaise: 13
+      Defense: 22
+    - Level: 63
+      HP: 82
+      Attack: 24
+      AttackRaise: 14
+      Defense: 22
+    - Level: 64
+      HP: 83
+      Attack: 24
+      AttackRaise: 14
+      Defense: 22
+    - Level: 65
+      HP: 84
+      Attack: 25
+      AttackRaise: 14
+      Defense: 23
+    - Level: 66
+      HP: 85
+      Attack: 25
+      AttackRaise: 14
+      Defense: 23
+    - Level: 67
+      HP: 86
+      Attack: 25
+      AttackRaise: 14
+      Defense: 23
+    - Level: 68
+      HP: 87
+      Attack: 26
+      AttackRaise: 15
+      Defense: 24
+    - Level: 69
+      HP: 88
+      Attack: 26
+      AttackRaise: 15
+      Defense: 24
+    - Level: 70
+      HP: 89
+      Attack: 26
+      AttackRaise: 15
+      Defense: 24
+    - Level: 71
+      HP: 90
+      Attack: 27
+      AttackRaise: 15
+      Defense: 25
+    - Level: 72
+      HP: 91
+      Attack: 27
+      AttackRaise: 15
+      Defense: 25
+    - Level: 73
+      HP: 92
+      Attack: 27
+      AttackRaise: 16
+      Defense: 25
+    - Level: 74
+      HP: 93
+      Attack: 28
+      AttackRaise: 16
+      Defense: 26
+    - Level: 75
+      HP: 94
+      Attack: 28
+      AttackRaise: 16
+      Defense: 26
+    - Level: 76
+      HP: 95
+      Attack: 28
+      AttackRaise: 16
+      Defense: 26
+    - Level: 77
+      HP: 96
+      Attack: 29
+      AttackRaise: 16
+      Defense: 27
+    - Level: 78
+      HP: 97
+      Attack: 29
+      AttackRaise: 17
+      Defense: 27
+    - Level: 79
+      HP: 98
+      Attack: 29
+      AttackRaise: 17
+      Defense: 27
+    - Level: 80
+      HP: 99
+      Attack: 30
+      AttackRaise: 17
+      Defense: 28
+    - Level: 81
+      HP: 100
+      Attack: 30
+      AttackRaise: 17
+      Defense: 28
+    - Level: 82
+      HP: 101
+      Attack: 30
+      AttackRaise: 17
+      Defense: 28
+    - Level: 83
+      HP: 102
+      Attack: 31
+      AttackRaise: 18
+      Defense: 29
+    - Level: 84
+      HP: 103
+      Attack: 31
+      AttackRaise: 18
+      Defense: 29
+    - Level: 85
+      HP: 104
+      Attack: 31
+      AttackRaise: 18
+      Defense: 29
+    - Level: 86
+      HP: 105
+      Attack: 32
+      AttackRaise: 18
+      Defense: 30
+    - Level: 87
+      HP: 106
+      Attack: 32
+      AttackRaise: 18
+      Defense: 30
+    - Level: 88
+      HP: 107
+      Attack: 32
+      AttackRaise: 19
+      Defense: 30
+    - Level: 89
+      HP: 108
+      Attack: 33
+      AttackRaise: 19
+      Defense: 31
+    - Level: 90
+      HP: 109
+      Attack: 33
+      AttackRaise: 19
+      Defense: 31
+    - Level: 91
+      HP: 110
+      Attack: 33
+      AttackRaise: 19
+      Defense: 31
+    - Level: 92
+      HP: 111
+      Attack: 34
+      AttackRaise: 19
+      Defense: 32
+    - Level: 93
+      HP: 112
+      Attack: 34
+      AttackRaise: 20
+      Defense: 32
+    - Level: 94
+      HP: 113
+      Attack: 34
+      AttackRaise: 20
+      Defense: 32
+    - Level: 95
+      HP: 114
+      Attack: 35
+      AttackRaise: 20
+      Defense: 33
+    - Level: 96
+      HP: 115
+      Attack: 35
+      AttackRaise: 20
+      Defense: 33
+    - Level: 97
+      HP: 116
+      Attack: 35
+      AttackRaise: 20
+      Defense: 33
+    - Level: 98
+      HP: 117
+      Attack: 36
+      AttackRaise: 21
+      Defense: 34
+    - Level: 99
+      HP: 118
+      Attack: 36
+      AttackRaise: 21
+      Defense: 34
+    - Level: 100
+      HP: 119
+      Attack: 36
+      AttackRaise: 21
+      Defense: 34
